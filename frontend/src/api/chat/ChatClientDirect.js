@@ -242,10 +242,43 @@ export default class ChatClientDirect {
     if (pos != -1) {
       cmd = cmd.substr(0, pos)
     }
+
+    console.log('command:', command)
+
     let handler = COMMAND_HANDLERS[cmd]
     if (handler) {
       handler.call(this, command)
     }
+  }
+
+  async onEntryEffect (command) {
+    if (!this.onAddText) {
+      return
+    }
+
+    let authorType
+    if (command.data.uid === this.roomOwnerUid) {
+      authorType = 3
+    } else {
+      authorType = 0
+    }
+
+    let data = {
+      avatarUrl: await avatar.getAvatarUrl(command.data.uid),
+      timestamp: command.data.trigger_time / 1e9,
+      authorName: command.data.copy_writing.match(/<%(.*)%>/)[1],
+      authorType: authorType,
+      content: '进入直播间',
+      privilegeType: 0,
+      isGiftDanmaku: false,
+      authorLevel: 0,
+      isNewbie: false,
+      isMobileVerified: false,
+      medalLevel: 0,
+      id: getUuid4Hex(),
+      translation: ''
+    }
+    this.onAddText(data)
   }
 
   async onReceiveDanmaku (command) {
@@ -368,5 +401,6 @@ const COMMAND_HANDLERS = {
   SEND_GIFT: ChatClientDirect.prototype.onReceiveGift,
   GUARD_BUY: ChatClientDirect.prototype.onBuyGuard,
   SUPER_CHAT_MESSAGE: ChatClientDirect.prototype.onSuperChat,
-  SUPER_CHAT_MESSAGE_DELETE: ChatClientDirect.prototype.onSuperChatDelete
+  SUPER_CHAT_MESSAGE_DELETE: ChatClientDirect.prototype.onSuperChatDelete,
+  ENTRY_EFFECT: ChatClientDirect.prototype.onEntryEffect,
 }
