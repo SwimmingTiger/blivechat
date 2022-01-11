@@ -276,7 +276,39 @@ export default class ChatClientDirect {
       isMobileVerified: false,
       medalLevel: 0,
       id: getUuid4Hex(),
-      translation: ''
+      translation: '',
+      isAction: true,
+    }
+    this.onAddText(data)
+  }
+
+  async onInteractWord (command) {
+    if (!this.onAddText) {
+      return
+    }
+
+    let authorType
+    if (command.data.uid === this.roomOwnerUid) {
+      authorType = 3
+    } else {
+      authorType = 0
+    }
+
+    let data = {
+      avatarUrl: await avatar.getAvatarUrl(command.data.uid),
+      timestamp: command.data.trigger_time / 1e9,
+      authorName: command.data.uname,
+      authorType: authorType,
+      content: '关注了直播间',
+      privilegeType: 0,
+      isGiftDanmaku: false,
+      authorLevel: 0,
+      isNewbie: false,
+      isMobileVerified: false,
+      medalLevel: 0,
+      id: getUuid4Hex(),
+      translation: '',
+      isAction: true,
     }
     this.onAddText(data)
   }
@@ -403,4 +435,5 @@ const COMMAND_HANDLERS = {
   SUPER_CHAT_MESSAGE: ChatClientDirect.prototype.onSuperChat,
   SUPER_CHAT_MESSAGE_DELETE: ChatClientDirect.prototype.onSuperChatDelete,
   ENTRY_EFFECT: ChatClientDirect.prototype.onEntryEffect,
+  INTERACT_WORD: ChatClientDirect.prototype.onInteractWord,
 }
