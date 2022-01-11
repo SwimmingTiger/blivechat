@@ -1,5 +1,5 @@
 <template>
-  <yt-live-chat-text-message-renderer :author-type="authorTypeText">
+  <yt-live-chat-text-message-renderer :author-type="authorTypeText" :msg-type="msgTypeText">
     <img-shadow id="author-photo" height="24" width="24" class="style-scope yt-live-chat-text-message-renderer"
       :imgUrl="avatarUrl"
     ></img-shadow>
@@ -53,6 +53,9 @@ export default {
     repeated: Number
   },
   computed: {
+    msgTypeText() {
+      return this.content.substr(0, 1) == '\uFEFF' ? 'notify' : 'danmaku'
+    },
     timeText() {
       return utils.getTimeTextHourMin(this.time)
     },
