@@ -299,7 +299,7 @@ export default class ChatClientDirect {
       timestamp: command.data.trigger_time / 1e9,
       authorName: command.data.uname,
       authorType: authorType,
-      content: '\uFEFF关注了直播间\uFEFF',
+      content: command.data.msg_type == 2 ? '\uFEFF关注了直播间\uFEFF' : '\uFEFF进入直播间\uFEFF',
       privilegeType: 0,
       isGiftDanmaku: false,
       authorLevel: 0,
