@@ -1,16 +1,14 @@
 <template>
-  <el-container class="app-wrapper" :class="{mobile: isMobile}">
+  <el-container class="app-wrapper" :class="{ mobile: isMobile }">
     <div v-show="isMobile && !hideSidebar" class="drawer-bg" @click="hideSidebar = true"></div>
-    <el-aside width="230px" class="sidebar-container" :class="{'hide-sidebar': hideSidebar}">
+    <el-aside width="230px" class="sidebar-container" :class="{ 'hide-sidebar': hideSidebar }">
       <div class="logo-container">
         <router-link to="/">
           <img src="@/assets/img/logo.png" class="sidebar-logo">
           <h1 class="sidebar-title">blivechat</h1>
         </router-link>
       </div>
-      <div class="version">
-        v1.5.3
-      </div>
+      <div class="version">{{ APP_VERSION }}</div>
       <sidebar></sidebar>
     </el-aside>
     <el-main>
@@ -23,7 +21,7 @@
 </template>
 
 <script>
-import Sidebar from './Sidebar.vue'
+import Sidebar from './Sidebar'
 
 export default {
   name: 'Layout',
@@ -32,6 +30,8 @@ export default {
   },
   data() {
     return {
+      APP_VERSION: process.env.APP_VERSION,
+
       isMobile: false,
       hideSidebar: true
     }

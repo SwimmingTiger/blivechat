@@ -38,8 +38,14 @@ export default {
     pinyin: 'ピンイン',
     kana: '仮名',
 
+    emoticon: 'カスタムスタンプ',
+    emoticonKeyword: '置き換えるキーワード',
+    emoticonUrl: 'URL',
+    operation: '操作',
+    addEmoticon: 'スタンプを追加',
+    emoticonFileTooLarge: 'ファイルサイズが大きすぎます。最大サイズは1MBです',
+
     roomUrl: 'ルームのURL',
-    copy: 'コピー',
     enterRoom: 'ルームに入る',
     enterTestRoom: 'テストルームに入る',
     exportConfig: 'コンフィグの導出',
@@ -74,6 +80,7 @@ export default {
     memberColor: 'メンバーの色',
     showBadges: '勲章を見せる',
     showColon: 'ユーザー名の後にコロンが表示されます',
+    emoticonSize: 'スタンプサイズ',
 
     messages: 'コメント',
     color: '色',
@@ -128,5 +135,14 @@ export default {
     p3: '3. スタイルジェネレータでお好みのコメント様子を選び、出力したCSSをコピーする',
     p4: '4. OBSでブラウザを新規作成する',
     p5: '5. プロパティでこぴーしたURLを入力し、カスタムCSSでスタイルジェネレータのCSSを入力する'
+  },
+  chat: {
+    moderator: 'モデレーター',
+    guardLevel1: '総督',
+    guardLevel2: '提督',
+    guardLevel3: '艦長',
+    sendGift: '{giftName}x{num} を贈りました',
+    membershipTitle: '新規メンバー',
+    tickerMembership: 'メンバー'
   }
 }

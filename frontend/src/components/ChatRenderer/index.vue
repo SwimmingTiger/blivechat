@@ -2,34 +2,47 @@
   <yt-live-chat-renderer class="style-scope yt-live-chat-app" style="--scrollbar-width:11px;" hide-timestamps
     @mousemove="refreshCantScrollStartTime"
   >
-    <ticker class="style-scope yt-live-chat-renderer" :messages="paidMessages" :showGiftName="showGiftName"></ticker>
+    <ticker class="style-scope yt-live-chat-renderer" :messages.sync="paidMessages" :showGiftName="showGiftName"></ticker>
     <yt-live-chat-item-list-renderer class="style-scope yt-live-chat-renderer" allow-scroll>
       <div ref="scroller" id="item-scroller" class="style-scope yt-live-chat-item-list-renderer animated" @scroll="onScroll">
         <div ref="itemOffset" id="item-offset" class="style-scope yt-live-chat-item-list-renderer" style="height: 0px;">
           <div ref="items" id="items" class="style-scope yt-live-chat-item-list-renderer" style="overflow: hidden"
-            :style="{transform: `translateY(${Math.floor(scrollPixelsRemaining)}px)`}"
+            :style="{ transform: `translateY(${Math.floor(scrollPixelsRemaining)}px)` }"
           >
             <template v-for="message in messages">
               <text-message :key="message.id" v-if="message.type === MESSAGE_TYPE_TEXT"
                 class="style-scope yt-live-chat-item-list-renderer"
-                :avatarUrl="message.avatarUrl" :time="message.time" :authorName="message.authorName"
-                :authorType="message.authorType" :content="getShowContent(message)" :privilegeType="message.privilegeType"
+                :time="message.time"
+                :avatarUrl="message.avatarUrl"
+                :authorName="message.authorName"
+                :authorType="message.authorType"
+                :privilegeType="message.privilegeType"
+                :richContent="getShowRichContent(message)"
                 :repeated="message.repeated"
               ></text-message>
               <paid-message :key="message.id" v-else-if="message.type === MESSAGE_TYPE_GIFT"
                 class="style-scope yt-live-chat-item-list-renderer"
-                :price="message.price" :avatarUrl="message.avatarUrl" :authorName="getShowAuthorName(message)"
-                :time="message.time" :content="getGiftShowContent(message)"
+                :time="message.time"
+                :avatarUrl="message.avatarUrl"
+                :authorName="getShowAuthorName(message)"
+                :price="message.price"
+                :content="getGiftShowContent(message)"
               ></paid-message>
               <membership-item :key="message.id" v-else-if="message.type === MESSAGE_TYPE_MEMBER"
                 class="style-scope yt-live-chat-item-list-renderer"
-                :avatarUrl="message.avatarUrl" :authorName="getShowAuthorName(message)" :privilegeType="message.privilegeType"
-                :title="message.title" :time="message.time"
+                :time="message.time"
+                :avatarUrl="message.avatarUrl"
+                :authorName="getShowAuthorName(message)"
+                :privilegeType="message.privilegeType"
+                :title="message.title"
               ></membership-item>
               <paid-message :key="message.id" v-else-if="message.type === MESSAGE_TYPE_SUPER_CHAT"
                 class="style-scope yt-live-chat-item-list-renderer"
-                :price="message.price" :avatarUrl="message.avatarUrl" :authorName="getShowAuthorName(message)"
-                :time="message.time" :content="getShowContent(message)"
+                :time="message.time"
+                :avatarUrl="message.avatarUrl"
+                :authorName="getShowAuthorName(message)"
+                :price="message.price"
+                :content="getShowContent(message)"
               ></paid-message>
             </template>
           </div>
@@ -41,10 +54,10 @@
 
 <script>
 import * as chatConfig from '@/api/chatConfig'
-import Ticker from './Ticker.vue'
-import TextMessage from './TextMessage.vue'
-import MembershipItem from './MembershipItem.vue'
-import PaidMessage from './PaidMessage.vue'
+import Ticker from './Ticker'
+import TextMessage from './TextMessage'
+import MembershipItem from './MembershipItem'
+import PaidMessage from './PaidMessage'
 import * as constants from './constants'
 
 // 只有要添加的消息需要平滑
@@ -114,7 +127,7 @@ export default {
   },
   computed: {
     canScrollToBottom() {
-      return this.atBottom/* || this.allowScroll*/
+      return this.atBottom/* || this.allowScroll */
     }
   },
   watch: {
@@ -137,6 +150,7 @@ export default {
       return constants.getGiftShowContent(message, this.showGiftName)
     },
     getShowContent: constants.getShowContent,
+    getShowRichContent: constants.getShowRichContent,
     getShowAuthorName: constants.getShowAuthorName,
 
     addMessage(message) {
@@ -211,12 +225,12 @@ export default {
       this.delMessages([id])
     },
     delMessages(ids) {
-      this.enqueueMessages(ids.map(id => {
-        return {
+      this.enqueueMessages(ids.map(
+        id => ({
           type: constants.MESSAGE_TYPE_DEL,
           id
-        }
-      }))
+        })
+      ))
     },
     clearMessages() {
       this.messages = []
@@ -288,7 +302,7 @@ export default {
         this.emitSmoothedMessageTimerId = window.setTimeout(this.emitSmoothedMessages)
       }
     },
-    messageNeedSmooth({type}) {
+    messageNeedSmooth({ type }) {
       return NEED_SMOOTH_MESSAGE_TYPES.indexOf(type) !== -1
     },
     emitSmoothedMessages() {
@@ -355,18 +369,18 @@ export default {
 
       for (let message of messageGroup) {
         switch (message.type) {
-          case constants.MESSAGE_TYPE_TEXT:
-          case constants.MESSAGE_TYPE_GIFT:
-          case constants.MESSAGE_TYPE_MEMBER:
-          case constants.MESSAGE_TYPE_SUPER_CHAT:
-            this.handleAddMessage(message)
-            break
-          case constants.MESSAGE_TYPE_DEL:
-            this.handleDelMessage(message)
-            break
-          case constants.MESSAGE_TYPE_UPDATE:
-            this.handleUpdateMessage(message)
-            break
+        case constants.MESSAGE_TYPE_TEXT:
+        case constants.MESSAGE_TYPE_GIFT:
+        case constants.MESSAGE_TYPE_MEMBER:
+        case constants.MESSAGE_TYPE_SUPER_CHAT:
+          this.handleAddMessage(message)
+          break
+        case constants.MESSAGE_TYPE_DEL:
+          this.handleDelMessage(message)
+          break
+        case constants.MESSAGE_TYPE_UPDATE:
+          this.handleUpdateMessage(message)
+          break
         }
       }
 
@@ -389,7 +403,7 @@ export default {
         }
       }
     },
-    handleDelMessage({id}) {
+    handleDelMessage({ id }) {
       for (let arr of [this.messages, this.paidMessages, this.messagesBuffer]) {
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].id === id) {
@@ -400,7 +414,7 @@ export default {
         }
       }
     },
-    handleUpdateMessage({id, newValuesObj}) {
+    handleUpdateMessage({ id, newValuesObj }) {
       // 遍历滚动的消息
       this.forEachRecentMessage(999999999, message => {
         if (message.id !== id) {
@@ -468,7 +482,7 @@ export default {
         this.lastSmoothChatMessageAddMs = performance.now()
       }
       let interval = performance.now() - this.lastSmoothChatMessageAddMs
-      this.chatRateMs = 0.9 * this.chatRateMs + 0.1 * interval
+      this.chatRateMs = (0.9 * this.chatRateMs) + (0.1 * interval)
       if (this.isSmoothed) {
         if (this.chatRateMs < 400) {
           this.isSmoothed = false

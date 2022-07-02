@@ -4,23 +4,20 @@
       :imgUrl="avatarUrl"
     ></img-shadow>
     <div id="content" class="style-scope yt-live-chat-text-message-renderer">
-      <span id="timestamp" class="style-scope yt-live-chat-text-message-renderer">{{timeText}}</span>
-      <yt-live-chat-author-chip class="style-scope yt-live-chat-text-message-renderer">
-        <span id="author-name" dir="auto" class="style-scope yt-live-chat-author-chip" :type="authorTypeText">{{
-          authorName
-          }}<!-- 这里是已验证勋章 -->
-          <span id="chip-badges" class="style-scope yt-live-chat-author-chip"></span>
-        </span>
-        <span id="chat-badges" class="style-scope yt-live-chat-author-chip">
-          <author-badge class="style-scope yt-live-chat-author-chip"
-            :isAdmin="authorType === 2" :privilegeType="privilegeType"
-          ></author-badge>
-        </span>
-      </yt-live-chat-author-chip>
-      <span id="message" class="style-scope yt-live-chat-text-message-renderer">{{
-        content
-        }}<el-badge :value="repeated" :max="99" v-show="repeated > 1" class="style-scope yt-live-chat-text-message-renderer"
-          :style="{'--repeated-mark-color': repeatedMarkColor}"
+      <span id="timestamp" class="style-scope yt-live-chat-text-message-renderer">{{ timeText }}</span>
+      <author-chip class="style-scope yt-live-chat-text-message-renderer"
+        :isInMemberMessage="false" :authorName="authorName" :authorType="authorType" :privilegeType="privilegeType"
+      ></author-chip>
+      <span id="message" class="style-scope yt-live-chat-text-message-renderer">
+        <template v-for="(content, index) in richContent">
+          <span :key="index" v-if="content.type === CONTENT_TYPE_TEXT">{{ content.text }}</span>
+          <img :key="index" v-else-if="content.type === CONTENT_TYPE_IMAGE"
+            class="emoji yt-formatted-string style-scope yt-live-chat-text-message-renderer"
+            :src="content.url" :alt="content.text" :shared-tooltip-text="content.text" :id="`emoji-${content.text}`"
+          >
+        </template>
+        <el-badge :value="repeated" :max="99" v-if="repeated > 1" class="style-scope yt-live-chat-text-message-renderer"
+          :style="{ '--repeated-mark-color': repeatedMarkColor }"
         ></el-badge>
       </span>
     </div>
@@ -28,8 +25,8 @@
 </template>
 
 <script>
-import ImgShadow from './ImgShadow.vue'
-import AuthorBadge from './AuthorBadge.vue'
+import ImgShadow from './ImgShadow'
+import AuthorChip from './AuthorChip'
 import * as constants from './constants'
 import * as utils from '@/utils'
 
@@ -41,16 +38,22 @@ export default {
   name: 'TextMessage',
   components: {
     ImgShadow,
-    AuthorBadge
+    AuthorChip
   },
   props: {
     avatarUrl: String,
     time: Date,
     authorName: String,
     authorType: Number,
-    content: String,
+    richContent: Array,
     privilegeType: Number,
     repeated: Number
+  },
+  data() {
+    return {
+      CONTENT_TYPE_TEXT: constants.CONTENT_TYPE_TEXT,
+      CONTENT_TYPE_IMAGE: constants.CONTENT_TYPE_IMAGE
+    }
   },
   computed: {
     msgTypeText() {
@@ -72,7 +75,7 @@ export default {
         color = [0, 0, 0]
         let t = (this.repeated - 2) / (10 - 2)
         for (let i = 0; i < 3; i++) {
-          color[i] = REPEATED_MARK_COLOR_START[i] + (REPEATED_MARK_COLOR_END[i] - REPEATED_MARK_COLOR_START[i]) * t
+          color[i] = REPEATED_MARK_COLOR_START[i] + ((REPEATED_MARK_COLOR_END[i] - REPEATED_MARK_COLOR_START[i]) * t)
         }
       }
       return `hsl(${color[0]}, ${color[1]}%, ${color[2]}%)`
@@ -98,4 +101,3 @@ yt-live-chat-text-message-renderer>#content>#message>.el-badge .el-badge__conten
 </style>
 
 <style src="@/assets/css/youtube/yt-live-chat-text-message-renderer.css"></style>
-<style src="@/assets/css/youtube/yt-live-chat-author-chip.css"></style>

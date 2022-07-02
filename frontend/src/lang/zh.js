@@ -38,8 +38,14 @@ export default {
     pinyin: '拼音',
     kana: '日文假名',
 
+    emoticon: '自定义表情',
+    emoticonKeyword: '替换关键词',
+    emoticonUrl: 'URL',
+    operation: '操作',
+    addEmoticon: '添加表情',
+    emoticonFileTooLarge: '文件尺寸太大，最大1MB',
+
     roomUrl: '房间URL',
-    copy: '复制',
     enterRoom: '进入房间',
     enterTestRoom: '进入测试房间',
     exportConfig: '导出配置',
@@ -74,6 +80,7 @@ export default {
     memberColor: '舰长颜色',
     showBadges: '显示勋章',
     showColon: '用户名后显示冒号',
+    emoticonSize: '表情大小',
 
     messages: '消息',
     color: '颜色',
@@ -128,5 +135,14 @@ export default {
     p3: '3. 使用样式生成器生成样式，复制CSS',
     p4: '4. 在OBS中添加浏览器源',
     p5: '5. URL处输入之前复制的房间URL，自定义CSS处输入之前复制的CSS'
+  },
+  chat: {
+    moderator: '管理员',
+    guardLevel1: '总督',
+    guardLevel2: '提督',
+    guardLevel3: '舰长',
+    sendGift: '赠送 {giftName}x{num}',
+    membershipTitle: '新会员',
+    tickerMembership: '会员'
   }
 }
