@@ -296,7 +296,7 @@ export default class ChatClientDirect {
     }
   }
 
-  async onEntryEffect (command) {
+  async onEntryEffect(command) {
     if (!this.onAddText) {
       return
     }
@@ -327,7 +327,7 @@ export default class ChatClientDirect {
     this.onAddText(data)
   }
 
-  async onInteractWord (command) {
+  async onInteractWord(command) {
     if (!this.onAddText) {
       return
     }
@@ -358,7 +358,7 @@ export default class ChatClientDirect {
     this.onAddText(data)
   }
 
-  async danmuMsgCallback (command) {
+  async danmuMsgCallback(command) {
     if (!this.onAddText) {
       return
     }
