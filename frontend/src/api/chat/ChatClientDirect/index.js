@@ -322,6 +322,7 @@ export default class ChatClientDirect {
       medalLevel: 0,
       id: getUuid4Hex(),
       translation: '',
+      emoticon: null,
       isAction: true,
     }
     this.onAddText(data)
@@ -353,6 +354,7 @@ export default class ChatClientDirect {
       medalLevel: 0,
       id: getUuid4Hex(),
       translation: '',
+      emoticon: null,
       isAction: true,
     }
     this.onAddText(data)
