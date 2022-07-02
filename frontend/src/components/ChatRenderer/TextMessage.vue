@@ -57,7 +57,7 @@ export default {
   },
   computed: {
     msgTypeText() {
-      return this.content.substr(0, 1) == '\uFEFF' ? 'notify' : 'danmaku'
+      return this.richContent[0].text.substr(0, 1) == '\uFEFF' ? 'notify' : 'danmaku'
     },
     timeText() {
       return utils.getTimeTextHourMin(this.time)
